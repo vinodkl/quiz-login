@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+	<title>Login - Apple Store</title>
+	<!-- for mobile screen set te width to device width -->
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<!-- include jquery lib -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<style type="text/css">
+		/*
+			base styles
+		*/
+		ul {
+			padding:0px;
+			margin:0px;
+		}
+		ul li {
+			list-style-type: none;
+			margin: 15px 0px;
+		}
+		/* page css */
+		.widget {
+			margin:10px;
+		}
+		/* module css */
+		.mod-login {
+			width: 500px;
+			background-color: #232323;
+			color:#e8e8e8;
+			font: 12px Arial;
+			padding: 20px 0px;
+			text-align: center;
+			border-radius: 5px;
+		}
+		.mod-login .hd h2 {
+			font-size: 14px;
+			font-family: Arial;
+		}
+		.mod-login .bd input {
+			-moz-border-radius: 2px;
+			-webkit-border-radius: 2px;
+			border-radius: 2px;
+			border:none;
+		}
+		.mod-login .bd .username, .mod-login .bd .password {
+			padding: 10px;
+			width: 350px;
+		}
+		.mod-login .bd input[type=submit] {
+			cursor:pointer;
+			background-color:#db4a39;
+			padding: 10px 125px;
+			-webkit-box-shadow: 0 0 4px rgba(0,0,0, .75);
+			-moz-box-shadow: 0 0 4px rgba(0,0,0, .75);
+			box-shadow: 0 0 4px rgba(0,0,0, .75);
+			color:#f3f3f3;
+		}
+	</style>
+
+	<style type="text/css">
+		/* Media quieres for smaller screen size */
+		@media screen and (max-width: 430px) {
+			.mod-login {
+				width: auto;
+			}
+			.mod-login .bd .username, 
+			.mod-login .bd .password {
+				width: 85%;
+				-webkit-appearance:none;
+			}
+			.mod-login .bd input[type=submit] {
+				width: 85%;
+				-webkit-appearance:none;
+				padding: 10px;
+			}
+		}
+	</style>
+	<script type="text/javascript">
+		var LoginWidget = function(node, options) {
+			//keep track of the number of instances of the widget
+			LoginWidget.count = LoginWidget.count || 0;
+			var id = ++LoginWidget.count;
+			this.nm = 'login_widget_';
+			this.id = this.nm + id;
+
+			//get the base node, if no node specified or if the node passed doesn't exist
+			if(!node || $("#" + node).length < 1) {
+				this.createBaseNode(id);
+				node = 'widget' + id;
+			}
+			this.baseNode = $("#"+node);
+
+			//if needed pass on some config data, not doing anything right now
+			this.init(options);
+		}
+
+		LoginWidget.prototype.createBaseNode = function(id) { 
+			$(document.body).append($('<div id="widget' + id + '" class="widget"></div>'));
+		}
+
+		LoginWidget.prototype.loadTemplate = function() {
+			var template = $('#login_tmpl').html();
+			//replace placeholders in template, right now trying to add a id for the parent node, not needed anyway, just demo
+			template = template.replace(/\{\{id\}\}/, ' id= "' + this.id + '" '); //TODO: handle failure case if template node doesn't exist
+			return template;
+		};
+
+		LoginWidget.prototype.init = function(options) {
+			this.options = options;
+		};
+
+		LoginWidget.prototype.bindAll = function() {
+			var that = this;
+			this.baseNode.find('form').bind('submit', function(e) {
+				var username = that.baseNode.find('.username')[0].value,
+					password = that.baseNode.find('.password')[0].value,
+					action = e.target.getAttribute('action') || 'login.php',
+					id = that.baseNode[0].getAttribute('id'),
+					data;
+
+				if(username && password) {
+					data = {username: username, password: password};
+					that.baseNode.find('.error-msg').hide();
+					
+					// do the POST if we have all values to be passed
+					$.ajax({
+					  type: 'POST',
+					  crossDomain: false,
+					  dataType: 'json',
+					  url: action,
+					  data: data,
+					  success: function(result) {
+					    if(result.status == "failure") {
+					    	that.baseNode.find('.error-msg').html('Invalid credentials');
+					    	that.baseNode.find('.error-msg').show();	
+					    } else {
+					    	that.baseNode.find('.error-msg').html('Login success. Welcome');
+					    	that.baseNode.find('.error-msg').show();
+					    }
+					  } //TODO: handle other failures
+					});
+				} else {
+					that.baseNode.find('.error-msg').html('Login failure!! Try again');
+					that.baseNode.find('.error-msg').show();
+				}
+				e.preventDefault();
+			});
+		};
+
+		LoginWidget.prototype.render = function() {
+			var template = this.loadTemplate(this.id); //get the final template with all substitutions
+			this.baseNode.html(template); //update the baseNode with template
+			this.bindAll(); //attach the event handlers in the module
+		}
+
+	</script>
+</head>
+<body>
+	<!-- template for login module -->
+	<script type="text/template" id="login_tmpl">
+		<div class="mod-login" {{id}}>
+			<div class="hd">
+				<h2>User Login</h2>
+			</div>
+			<div class="bd">
+				<div class="error-msg" style="display:none;"> </div>
+				<form action="login.php" method="POST">
+					<ul>
+						<li>
+							<input type="text" class="username" placeholder="Apple ID" >
+						</li>
+						<li>
+							<input type="password" class="password" placeholder="password" >
+						</li>
+						<li>
+							<input class="submit" type="submit" name="login" value="Login to your account">
+						</li>
+					</ul>
+				</form>
+			</div>
+		</div>
+	</script> <!-- end template -->
+
+	<div class="widget" id="widget1"> </div>
+
+	<script type="text/javascript">
+
+		// Case 1 : pass in an existing node to append the module to
+		var wd1 = new LoginWidget("widget1", {});
+		wd1.render();
+
+		// Case 2: pass in a non existing node
+		var wd2 = new LoginWidget("nowidgetnode");
+		wd2.render();
+		
+		// Case 3: not passing in any node
+		var wd3 = new LoginWidget();
+		wd3.render();
+	</script>
+</body>
+</html>
