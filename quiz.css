@@ -1,0 +1,65 @@
+/*
+	base styles
+*/
+ul {
+	padding:0px;
+	margin:0px;
+}
+ul li {
+	list-style-type: none;
+	margin: 15px 0px;
+}
+/* page css */
+.widget {
+	margin:10px;
+}
+/* module css */
+.mod-login {
+	width: 500px;
+	background-color: #232323;
+	color:#e8e8e8;
+	font: 12px Arial;
+	padding: 20px 0px;
+	text-align: center;
+	border-radius: 5px;
+}
+.mod-login .hd h2 {
+	font-size: 14px;
+	font-family: Arial;
+}
+.mod-login .bd input {
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	border:none;
+}
+.mod-login .bd .username, .mod-login .bd .password {
+	padding: 10px;
+	width: 350px;
+}
+.mod-login .bd input[type=submit] {
+	cursor:pointer;
+	background-color:#db4a39;
+	padding: 10px 125px;
+	-webkit-box-shadow: 0 0 4px rgba(0,0,0, .75);
+	-moz-box-shadow: 0 0 4px rgba(0,0,0, .75);
+	box-shadow: 0 0 4px rgba(0,0,0, .75);
+	color:#f3f3f3;
+}
+
+/* Media quieres for smaller screen size */
+@media screen and (max-width: 430px) {
+	.mod-login {
+		width: auto;
+	}
+	.mod-login .bd .username, 
+	.mod-login .bd .password {
+		width: 85%;
+		-webkit-appearance:none;
+	}
+	.mod-login .bd input[type=submit] {
+		width: 85%;
+		-webkit-appearance:none;
+		padding: 10px;
+	}
+}
