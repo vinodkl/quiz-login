@@ -46,6 +46,9 @@ ul li {
 	box-shadow: 0 0 4px rgba(0,0,0, .75);
 	color:#f3f3f3;
 }
+.placeholder { 
+	color: #aaa; 
+}
 
 /* Media quieres for smaller screen size */
 @media screen and (max-width: 430px) {

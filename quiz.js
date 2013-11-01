@@ -14,11 +14,11 @@ var LoginWidget = function(node, options) {
 
 	//if needed pass on some config data, not doing anything right now
 	this.init(options);
-}
+};
 
 LoginWidget.prototype.createBaseNode = function(id) { 
 	$(document.body).append($('<div id="widget' + id + '" class="widget"></div>'));
-}
+};
 
 LoginWidget.prototype.loadTemplate = function() {
 	var template = $('#login_tmpl').html();
@@ -32,16 +32,36 @@ LoginWidget.prototype.init = function(options) {
 };
 
 LoginWidget.prototype.bindAll = function() {
-	var that = this;
+	var that = this,
+		username = this.baseNode.find('.username'),
+		password = this.baseNode.find('.password'),
+		addPlaceHolder = function(el) {
+			if (el.val() == '' || el.val() == el.attr('placeholder')) {
+				el.addClass('placeholder');
+				el.val(el.attr('placeholder'));
+			}
+			if(el.hasClass('password') && (el.val() == '' || el.val() == el.attr('placeholder'))) {
+				el.attr('type', "text");
+			}
+		},
+		removePlaceHolder = function(el) {
+			if(el.val() == el.attr('placeholder')) {
+				el.val('');
+				el.removeClass('placeholder');
+			}
+			if(el.hasClass('password')) {
+				el.attr('type', "password");
+			}
+		};
+
+	//event handler submit
 	this.baseNode.find('form').bind('submit', function(e) {
-		var username = that.baseNode.find('.username')[0].value,
-			password = that.baseNode.find('.password')[0].value,
-			action = e.target.getAttribute('action') || 'login.php',
-			id = that.baseNode[0].getAttribute('id'),
+			var action = e.target.getAttribute('action') || 'login.php',
+			id = $(that.baseNode).attr('id'),
 			data;
 
-		if(username && password) {
-			data = {username: username, password: password};
+		if($(username).val() && $(password).val()) {
+			data = {username: $(username).val(), password: $(password).val()};
 			that.baseNode.find('.error-msg').hide();
 			
 			// do the POST if we have all values to be passed
@@ -67,10 +87,38 @@ LoginWidget.prototype.bindAll = function() {
 		}
 		e.preventDefault();
 	});
+
+	// For IE, hack the placeholder
+	if(typeof document.createElement("input").placeholder == 'undefined') {
+		
+		addPlaceHolder($(username));
+		addPlaceHolder($(password));
+
+		username.bind('focus', function(e) {
+			var el = $(e.target);
+			removePlaceHolder(el);
+		});
+
+		username.bind('blur', function(e) {
+			var el = $(e.target);
+			addPlaceHolder(el);
+		});
+
+		password.bind('focus', function(e) {
+			var el = $(e.target);
+			removePlaceHolder(el);
+		});
+
+		password.bind('blur', function(e) {
+			var el = $(e.target);
+			addPlaceHolder(el);
+		});
+	}
 };
+
 
 LoginWidget.prototype.render = function() {
 	var template = this.loadTemplate(this.id); //get the final template with all substitutions
 	this.baseNode.html(template); //update the baseNode with template
 	this.bindAll(); //attach the event handlers in the module
-}
+};
