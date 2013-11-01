@@ -20,12 +20,15 @@ ul li {
 	color:#e8e8e8;
 	font: 12px Arial;
 	padding: 20px 0px;
-	text-align: center;
 	border-radius: 5px;
 }
 .mod-login .hd h2 {
 	font-size: 14px;
 	font-family: Arial;
+}
+.mod-login .hd, .mod-login .bd {
+	margin: 0 auto;
+	width: 380px;
 }
 .mod-login .bd input {
 	-moz-border-radius: 2px;
