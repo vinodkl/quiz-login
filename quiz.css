@@ -28,7 +28,7 @@ ul li {
 }
 .mod-login .hd, .mod-login .bd {
 	margin: 0 auto;
-	width: 380px;
+	width: 300px;
 }
 .mod-login .bd input {
 	-moz-border-radius: 2px;
@@ -36,18 +36,20 @@ ul li {
 	border-radius: 2px;
 	border:none;
 }
-.mod-login .bd .username, .mod-login .bd .password {
+.mod-login .bd input {
 	padding: 10px;
-	width: 350px;
+	width: 300px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
 .mod-login .bd input[type=submit] {
 	cursor:pointer;
 	background-color:#db4a39;
-	padding: 10px 125px;
 	-webkit-box-shadow: 0 0 4px rgba(0,0,0, .75);
 	-moz-box-shadow: 0 0 4px rgba(0,0,0, .75);
 	box-shadow: 0 0 4px rgba(0,0,0, .75);
-	color:#f3f3f3;
+	color:#e8e8e8;
 }
 .placeholder { 
 	color: #aaa; 
